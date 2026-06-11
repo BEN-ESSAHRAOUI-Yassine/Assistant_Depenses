@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('title');
             $table->longText('texte_source');
-            //$table->enum('statut', ['en_attente','traite','echoue'])->default('en_attente');
+            // $table->enum('statut', ['en_attente','traite','echoue'])->default('en_attente');
             $table->string('statut')->default('en_attente');
             $table->json('payload_brut')->nullable();
-            $table->decimal('estimated_total',10, 2);
+            $table->decimal('estimated_total', 10, 2);
             $table->string('currency')->nullable()->default('MAD');
             $table->timestamps();
         });
