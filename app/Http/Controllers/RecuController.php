@@ -2,64 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatutRecu;
+use App\Http\Requests\StoreRecuRequest;
 use App\Models\Recu;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class RecuController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        //
+        $recus = auth()
+            ->user()
+            ->recus()
+            ->withCount('depenses')
+            ->latest()
+            ->get();
+
+        return view('recus.index', compact('recus'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('recus.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreRecuRequest $request): RedirectResponse
     {
-        //
+        auth()->user()->recus()->create([
+            'title' => $request->validated('title'),
+            'texte_source' => $request->validated('texte_source'),
+            'estimated_total' => $request->validated('estimated_total') ?? 0,
+            'statut' => StatutRecu::EnAttente,
+        ]);
+
+        return redirect()
+            ->route('recus.index')
+            ->with('success', 'Reçu créé avec succès.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Recu $recu)
+    public function show(Recu $recu): View
     {
-        //
+        $this->authorize('view', $recu);
+
+        $recu->load('depenses');
+
+        return view('recus.show', compact('recu'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Recu $recu)
+    public function destroy(Recu $recu): RedirectResponse
     {
-        //
-    }
+        $this->authorize('delete', $recu);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Recu $recu)
-    {
-        //
-    }
+        $recu->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Recu $recu)
-    {
-        //
+        return redirect()
+            ->route('recus.index')
+            ->with('success', 'Reçu supprimé.');
     }
 }

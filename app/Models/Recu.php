@@ -19,11 +19,12 @@ class Recu extends Model
         'currency',
     ];
 
-    protected function casts(): array
-    {
+    protected function casts(){
+
         return [
             'statut' => StatutRecu::class,
             'payload_brut' => 'array',
+
         ];
     }
 
@@ -36,4 +37,6 @@ class Recu extends Model
     {
         return $this->hasMany(Depense::class);
     }
+
+
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('libelle');
             $table->integer('quantite');
             $table->decimal('prix_unitaire', 10, 2);
-            //$table->enum('categorie', ['alimentaire','boissons','hygiene','entretien','autre'])->default('autre');
+            // $table->enum('categorie', ['alimentaire','boissons','hygiene','entretien','autre'])->default('autre');
             $table->string('categorie');
             $table->timestamps();
         });
