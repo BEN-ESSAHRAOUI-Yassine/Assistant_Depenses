@@ -24,6 +24,7 @@ class Recu extends Model
         return [
             'statut' => StatutRecu::class,
             'payload_brut' => 'array',
+            'total_estime' => 'decimal:2',
 
         ];
     }
