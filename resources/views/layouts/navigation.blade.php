@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('recus.index')" :active="request()->routeIs('recus.*')">
                         {{ __('Mes Reçus') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('depenses.index')" :active="request()->routeIs('depenses.*')">
+                        {{ __('Dépenses') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -75,6 +78,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('recus.index')" :active="request()->routeIs('recus.*')">
                 {{ __('Mes Reçus') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('depenses.index')" :active="request()->routeIs('depenses.*')">
+                {{ __('Dépenses') }}
             </x-responsive-nav-link>
         </div>
 
