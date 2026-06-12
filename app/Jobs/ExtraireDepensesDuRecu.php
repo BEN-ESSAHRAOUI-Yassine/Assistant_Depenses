@@ -5,11 +5,10 @@ namespace App\Jobs;
 use App\Ai\Agents\ReceiptExtractor;
 use App\Enums\StatutRecu;
 use App\Models\Recu;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
-class ExtraireDepensesDuRecu implements ShouldBeUnique, ShouldQueue
+class ExtraireDepensesDuRecu implements ShouldQueue
 {
     use Queueable;
 
@@ -20,16 +19,6 @@ class ExtraireDepensesDuRecu implements ShouldBeUnique, ShouldQueue
     public function backoff(): array
     {
         return [10, 30];
-    }
-
-    public function uniqueId(): mixed
-    {
-        return $this->recu->id;
-    }
-
-    public function uniqueFor(): int
-    {
-        return 60;
     }
 
     public function __construct(
