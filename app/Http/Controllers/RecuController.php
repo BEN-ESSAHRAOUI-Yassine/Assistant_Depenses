@@ -8,6 +8,7 @@ use App\Http\Requests\StoreRecuRequest;
 use App\Models\Recu;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use App\Jobs\ExtraireDepensesDuRecu;
 
 class RecuController extends Controller
 {
@@ -36,36 +37,37 @@ class RecuController extends Controller
             'statut' => StatutRecu::EnAttente,
         ]);
 
-        try {
+        // try {
 
-            $response = (new ReceiptExtractor)
-                ->prompt($recu->texte_source);
+        //     $response = (new ReceiptExtractor)
+        //         ->prompt($recu->texte_source);
 
-            foreach ($response['articles'] as $article) {
+        //     foreach ($response['articles'] as $article) {
 
-                $recu->depenses()->create([
-                    'libelle' => $article['libelle'],
-                    'quantite' => $article['quantite'],
-                    'prix_unitaire' => $article['prix_unitaire'],
-                    'categorie' => $article['categorie'],
-                ]);
-            }
+        //         $recu->depenses()->create([
+        //             'libelle' => $article['libelle'],
+        //             'quantite' => $article['quantite'],
+        //             'prix_unitaire' => $article['prix_unitaire'],
+        //             'categorie' => $article['categorie'],
+        //         ]);
+        //     }
 
-            $recu->update([
-                'statut' => StatutRecu::Traite,
-                'payload_brut' => $response,
-                'total_estime' => $response['total_estime'],
-                'currency' => $response['currency'],
-            ]);
+        //     $recu->update([
+        //         'statut' => StatutRecu::Traite,
+        //         'payload_brut' => $response,
+        //         'total_estime' => $response['total_estime'],
+        //         'currency' => $response['currency'],
+        //     ]);
 
-        } catch (\Throwable $e) {
+        // } catch (\Throwable $e) {
 
-            $recu->update([
-                'statut' => StatutRecu::Echoue,
-            ]);
+        //     $recu->update([
+        //         'statut' => StatutRecu::Echoue,
+        //     ]);
 
-            report($e);
-        }
+        //     report($e);
+        // }
+        ExtraireDepensesDuRecu::dispatch($recu);
 
         return redirect()
             ->route('recus.show', $recu)
