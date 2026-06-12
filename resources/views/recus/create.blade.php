@@ -1,106 +1,80 @@
 <x-app-layout>
-    <div class="max-w-4xl mx-auto p-6">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         <div class="mb-6">
-            <a
-                href="{{ route('recus.index') }}"
-                class="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 transition"
-            >
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <a href="{{ route('recus.index') }}" class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
                 Retour à la liste
             </a>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <h1 class="text-2xl font-bold text-gray-900 mb-1">
-                Nouveau Reçu
-            </h1>
-            <p class="text-sm text-gray-500 mb-6">
-                Collez le texte extrait de votre reçu (OCR) ci-dessous.
-            </p>
+        <div class="card p-8">
+            <div class="mb-8">
+                <h1 class="text-2xl font-display font-bold text-slate-900">Nouveau Reçu</h1>
+                <p class="text-sm text-slate-500 mt-1">Collez le texte extrait de votre reçu (OCR) et laissez l'IA faire le reste.</p>
+            </div>
 
             <form method="POST" action="{{ route('recus.store') }}">
                 @csrf
 
-                <div class="mb-4">
-                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
-                        Titre
-                    </label>
-                    <input
-                        type="text"
-                        name="title"
-                        id="title"
-                        value="{{ old('title') }}"
-                        class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
-                        placeholder="Ex: Courses Carrefour 10/06"
-                    >
-                    @error('title')
-                        <p class="flex items-center gap-1 text-red-600 mt-1 text-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {{ $message }}
-                        </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="title" class="label">Titre</label>
+                        <input
+                            type="text"
+                            name="title"
+                            id="title"
+                            value="{{ old('title') }}"
+                            class="input-field"
+                            placeholder="Ex: Courses Carrefour 10/06"
+                        >
+                        @error('title')
+                            <x-input-error :messages="$messages" />
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="estimated_total" class="label">Total estimé (MAD)</label>
+                        <input
+                            type="number"
+                            name="estimated_total"
+                            id="estimated_total"
+                            value="{{ old('estimated_total') }}"
+                            step="0.01"
+                            min="0"
+                            class="input-field"
+                            placeholder="0.00"
+                        >
+                        @error('estimated_total')
+                            <x-input-error :messages="$messages" />
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label for="texte_source" class="label">Texte du reçu</label>
+                    <textarea
+                        name="texte_source"
+                        id="texte_source"
+                        rows="14"
+                        class="input-field font-mono text-xs leading-relaxed"
+                        placeholder="Collez ici le texte complet de votre reçu..."
+                    >{{ old('texte_source') }}</textarea>
+                    @error('texte_source')
+                        <x-input-error :messages="$messages" />
                     @enderror
                 </div>
 
-                <div class="mb-4">
-                    <label for="estimated_total" class="block text-sm font-medium text-gray-700 mb-1">
-                        Total estimé (MAD)
-                    </label>
-                    <input
-                        type="number"
-                        name="estimated_total"
-                        id="estimated_total"
-                        value="{{ old('estimated_total') }}"
-                        step="0.01"
-                        min="0"
-                        class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
-                        placeholder="0.00"
-                    >
-                    @error('estimated_total')
-                        <p class="flex items-center gap-1 text-red-600 mt-1 text-sm">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </div>
-
-                <textarea
-                    name="texte_source"
-                    rows="12"
-                    class="w-full border border-gray-300 rounded-lg p-4 text-sm focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition"
-                    placeholder="Collez ici le texte du reçu..."
-                >{{ old('texte_source') }}</textarea>
-
-                @error('texte_source')
-                    <p class="flex items-center gap-1 text-red-600 mt-2 text-sm">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <div class="flex items-center gap-3">
+                    <button type="submit" class="btn-primary">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
-                        {{ $message }}
-                    </p>
-                @enderror
-
-                <div class="flex items-center gap-3 mt-6">
-                <button
-                    type="submit"
-                    class="inline-flex items-center px-8 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition shadow-sm"
-                >
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Enregistrer
-                </button>
-
-                    <a
-                        href="{{ route('recus.index') }}"
-                        class="inline-flex items-center px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
-                    >
+                        Enregistrer
+                    </button>
+                    <a href="{{ route('recus.index') }}" class="btn-secondary">
                         Annuler
                     </a>
                 </div>
