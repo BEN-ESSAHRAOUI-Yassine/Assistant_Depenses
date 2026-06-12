@@ -142,10 +142,10 @@ it('has retry and backoff configuration', function () {
     expect($job->backoff())->toBe([10, 30]);
 });
 
-it('implements ShouldBeUnique', function () {
+it('does not implement ShouldBeUnique', function () {
     $job = new ExtraireDepensesDuRecu(new Recu);
 
-    expect($job)->toBeInstanceOf(ShouldBeUnique::class);
+    expect($job)->not->toBeInstanceOf(ShouldBeUnique::class);
     expect(class_uses_recursive($job))->toContain(Queueable::class);
 });
 
