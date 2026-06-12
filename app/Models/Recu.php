@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use App\Enums\StatutRecu;
+use Database\Factories\RecuFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Recu extends Model
 {
+    /** @use HasFactory<RecuFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'title',
@@ -17,14 +22,16 @@ class Recu extends Model
         'payload_brut',
         'estimated_total',
         'currency',
+        'error_message',
     ];
 
-    protected function casts(){
+    protected function casts()
+    {
 
         return [
             'statut' => StatutRecu::class,
             'payload_brut' => 'array',
-            'total_estime' => 'decimal:2',
+            'estimated_total' => 'decimal:2',
 
         ];
     }
@@ -38,6 +45,4 @@ class Recu extends Model
     {
         return $this->hasMany(Depense::class);
     }
-
-
 }

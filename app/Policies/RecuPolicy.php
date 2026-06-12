@@ -12,7 +12,7 @@ class RecuPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,12 +28,17 @@ class RecuPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Determine whether the user can update the model.
      */
+    public function retry(User $user, Recu $recu): bool
+    {
+        return $user->id === $recu->user_id;
+    }
+
     public function update(User $user, Recu $recu): bool
     {
         return false;

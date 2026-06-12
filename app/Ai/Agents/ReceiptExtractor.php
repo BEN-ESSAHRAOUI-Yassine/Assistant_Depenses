@@ -10,8 +10,6 @@ use Laravel\Ai\Contracts\HasTools;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Messages\Message;
 use Laravel\Ai\Promptable;
-use Stringable;
-
 
 class ReceiptExtractor implements Agent, Conversational, HasStructuredOutput, HasTools
 {
@@ -22,7 +20,7 @@ class ReceiptExtractor implements Agent, Conversational, HasStructuredOutput, Ha
      */
     public function instructions(): string
     {
-        return <<<PROMPT
+        return <<<'PROMPT'
         You extract expenses from Moroccan supplier receipts.
 
         The receipt may contain:
@@ -46,10 +44,9 @@ class ReceiptExtractor implements Agent, Conversational, HasStructuredOutput, Ha
         PROMPT;
     }
 
-     /**
+    /**
      * Get the agent's structured output schema definition.
      */
-
     public function schema(JsonSchema $schema): array
     {
         return [
@@ -110,7 +107,4 @@ class ReceiptExtractor implements Agent, Conversational, HasStructuredOutput, Ha
     {
         return [];
     }
-
-   
-
 }

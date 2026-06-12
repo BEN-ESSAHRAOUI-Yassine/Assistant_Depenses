@@ -40,6 +40,25 @@
             ];
         @endphp
 
+        @if (session('success'))
+            <div class="mb-4 px-4 py-3 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="mb-4 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if ($recu->error_message)
+            <div class="mb-4 px-4 py-3 bg-red-50 border border-red-200 text-red-700 rounded-lg">
+                <strong class="font-semibold">Erreur d'extraction :</strong>
+                {{ $recu->error_message }}
+            </div>
+        @endif
+
         <div class="flex items-center justify-between mb-6">
             <div class="flex items-center gap-3">
                 <h1 class="text-2xl font-bold text-gray-900">
@@ -51,24 +70,41 @@
                 </span>
             </div>
 
-            <form
-                method="POST"
-                action="{{ route('recus.destroy', $recu) }}"
-                class="inline"
-                onsubmit="return confirm('Supprimer ce reçu ?')"
-            >
-                @csrf
-                @method('DELETE')
-                <button
-                    type="submit"
-                    class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition"
+            <div class="flex items-center gap-2">
+                @if ($recu->statut === \App\Enums\StatutRecu::Echoue)
+                    <form method="POST" action="{{ route('recus.retry', $recu) }}" class="inline">
+                        @csrf
+                        <button
+                            type="submit"
+                            class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-amber-600 bg-amber-50 rounded-lg hover:bg-amber-100 transition"
+                        >
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Relancer l'extraction
+                        </button>
+                    </form>
+                @endif
+
+                <form
+                    method="POST"
+                    action="{{ route('recus.destroy', $recu) }}"
+                    class="inline"
+                    onsubmit="return confirm('Supprimer ce reçu ?')"
                 >
-                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    Supprimer
-                </button>
-            </form>
+                    @csrf
+                    @method('DELETE')
+                    <button
+                        type="submit"
+                        class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition"
+                    >
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Supprimer
+                    </button>
+                </form>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
